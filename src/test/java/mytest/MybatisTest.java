@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
+import java.sql.Statement;
 
 public class MybatisTest {
 
@@ -18,8 +19,6 @@ public class MybatisTest {
 
 
         SqlSession sqlSession = sqlSessionFactory.openSession();
-
-
 
         Mapper mapper = sqlSession.getMapper(Mapper.class);
         User user = mapper.getUser(1);

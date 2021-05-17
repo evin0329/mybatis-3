@@ -45,6 +45,9 @@ import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ *
+ * 基础执行器  模板方法
+ *
  * @author Clinton Begin
  */
 public abstract class BaseExecutor implements Executor {
