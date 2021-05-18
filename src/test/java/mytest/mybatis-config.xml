@@ -17,34 +17,35 @@
 
 -->
 <!DOCTYPE configuration
-    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
 
-	<!-- autoMappingBehavior should be set in each test case -->
+    <!-- autoMappingBehavior should be set in each test case -->
 
-	<environments default="development">
-		<environment id="development">
-			<transactionManager type="JDBC">
-				<property name="" value="" />
-			</transactionManager>
-			<dataSource type="UNPOOLED">
-				<property name="driver" value="com.mysql.jdbc.Driver" />
-				<!--jdbc:mysql://localhost:3306/test?useUnicode=true&serverTimezone=GMT&useSSL=false&characterEncoding=utf8&useServerPrepStmts=false&allowMultiQueries=true-->
-				<property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;serverTimezone=GMT" />
-				<property name="username" value="root" />
-				<property name="password" value="123456" />
-			</dataSource>
-		</environment>
-	</environments>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC">
+                <property name="" value=""/>
+            </transactionManager>
+            <dataSource type="UNPOOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <!--jdbc:mysql://localhost:3306/test?useUnicode=true&serverTimezone=GMT&useSSL=false&characterEncoding=utf8&useServerPrepStmts=false&allowMultiQueries=true-->
+                <property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;serverTimezone=GMT"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
 
-<!--	<mappers>-->
-<!--		<mapper resource="mytest/Mapper.xml" />-->
-<!--	</mappers>-->
+    <mappers>
+        <!--	<mapper resource="mytest/Mapper.xml" />-->
+        <package name="mytest"/>
+    </mappers>
 
-	<mappers>
-		<package name="mytest"/>
-	</mappers>
+<!--    <plugins>-->
+<!--        <plugin interceptor=""></plugin>-->
+<!--    </plugins>-->
 
 </configuration>
