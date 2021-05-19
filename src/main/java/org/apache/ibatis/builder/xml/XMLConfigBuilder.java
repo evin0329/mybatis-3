@@ -100,6 +100,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   private void parseConfiguration(XNode root) {
+    // 解析<configuration>下所有标签
     try {
       //issue #117 read properties first
       propertiesElement(root.evalNode("properties"));
@@ -271,10 +272,14 @@ public class XMLConfigBuilder extends BaseBuilder {
       }
       for (XNode child : context.getChildren()) {
         String id = child.getStringAttribute("id");
+        // 为<environments>指定标签
         if (isSpecifiedEnvironment(id)) {
+          // 获取事务管理器配置
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
+          // 获取数据源配置
           DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
           DataSource dataSource = dsFactory.getDataSource();
+          // 构建器构建environment并赋值
           Environment.Builder environmentBuilder = new Environment.Builder(id)
               .transactionFactory(txFactory)
               .dataSource(dataSource);
@@ -355,10 +360,13 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void mapperElement(XNode parent) throws Exception {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
+        // 解析<package>标签
         if ("package".equals(child.getName())) {
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
-        } else {
+        }
+        // 解析<mapper>标签
+        else {
           String resource = child.getStringAttribute("resource");
           String url = child.getStringAttribute("url");
           String mapperClass = child.getStringAttribute("class");
