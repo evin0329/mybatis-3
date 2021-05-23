@@ -1,5 +1,7 @@
-package mytest;
+package mybatisdemo;
 
+import mybatisdemo.domain.User;
+import mybatisdemo.mapper.Mapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -12,7 +14,7 @@ public class MybatisTest {
 
     public static void main(String[] args) throws Exception {
 
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mytest/mybatis-config.xml"));
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatisdemo/mybatis-config.xml"));
 
 
 //        mapper.equals("");

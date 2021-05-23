@@ -13,8 +13,10 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package mytest;
+package mybatisdemo.mapper;
 
+import mybatisdemo.domain.Book;
+import mybatisdemo.domain.User;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.submitted.automapping.Article;

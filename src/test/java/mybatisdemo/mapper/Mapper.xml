@@ -20,7 +20,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="mytest.Mapper">
+<mapper namespace="mybatisdemo.mapper.Mapper">
 
 
 	<select id="getUser" resultMap="result" parameterType="int">
@@ -29,14 +29,14 @@
 	</select>
 
 
-	<resultMap type="mytest.User" id="result" autoMapping="true">
+	<resultMap type="mybatisdemo.domain.User" id="result" autoMapping="true">
 	</resultMap>
 
 	<select id="getUserWithPhoneNumber" resultMap="resultWithPhoneNumber">
 		select * from users where id = #{id}
 	</select>
 
-	<resultMap type="mytest.User" id="resultWithPhoneNumber" autoMapping="true">
+	<resultMap type="mybatisdemo.domain.User" id="resultWithPhoneNumber" autoMapping="true">
 		<result property="phone" column="phone_number"/>
 	</resultMap>
 
@@ -54,11 +54,11 @@
 		<include refid="selectUserPetBreeder" />
 	</select>
 
-	<resultMap type="mytest.User" id="resultWithPets_Inline" autoMapping="true">
+	<resultMap type="mybatisdemo.domain.User" id="resultWithPets_Inline" autoMapping="true">
 		<id column="id" property="id"/>
-		<collection property="pets" ofType="mytest.Pet">
+		<collection property="pets" ofType="mybatisdemo.domain.Pet">
 			<id column="petId" property="petId"/>
-			<association property="breeder" javaType="mytest.Breeder" autoMapping="true"/>
+			<association property="breeder" javaType="mybatisdemo.domain.Breeder" autoMapping="true"/>
 		</collection>
 	</resultMap>
 
@@ -66,21 +66,21 @@
 		<include refid="selectUserPetBreeder" />
 	</select>
 
-	<resultMap type="mytest.User" id="resultWithPets_External" autoMapping="true">
+	<resultMap type="mybatisdemo.domain.User" id="resultWithPets_External" autoMapping="true">
 		<id column="id" property="id"/>
 		<collection property="pets" resultMap="petResult" />
 	</resultMap>
 
-	<resultMap type="mytest.Pet" id="petResult">
+	<resultMap type="mybatisdemo.domain.Pet" id="petResult">
 		<id property="petId" column="petId" />
 		<association property="breeder" resultMap="breederResult" />
 	</resultMap>
 
-	<resultMap type="mytest.Breeder" id="breederResult" autoMapping="true">
+	<resultMap type="mybatisdemo.domain.Breeder" id="breederResult" autoMapping="true">
 		<id property="breederId" column="breederId" />
 	</resultMap>
 
-	<resultMap type="mytest.Book" id="bookResult">
+	<resultMap type="mybatisdemo.domain.Book" id="bookResult">
 		<result property="name" column="name"/>
 	</resultMap>
 	
@@ -88,7 +88,7 @@
 		select version, name from books
 	</select>
 	
-	<select id="getArticle" resultType="mytest.Article">
+	<select id="getArticle" resultType="mybatisdemo.domain.Article">
 		select 9 as version from INFORMATION_SCHEMA.SYSTEM_USERS
 	</select>	
 </mapper>

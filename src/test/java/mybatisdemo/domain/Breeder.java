@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package mytest;
+package mybatisdemo.domain;
 
 public class Breeder {
 

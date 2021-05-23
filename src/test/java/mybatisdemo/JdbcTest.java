@@ -1,4 +1,4 @@
-package mytest;
+package mybatisdemo;
 
 import org.junit.After;
 import org.junit.Before;

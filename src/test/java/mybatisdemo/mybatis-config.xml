@@ -41,7 +41,7 @@
 
     <mappers>
         <!--	<mapper resource="mytest/Mapper.xml" />-->
-        <package name="mytest"/>
+        <package name="mybatisdemo.mapper"/>
     </mappers>
 
 <!--    <plugins>-->
