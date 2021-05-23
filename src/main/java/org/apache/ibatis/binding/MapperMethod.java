@@ -83,7 +83,9 @@ public class MapperMethod {
         // 返回游标
         else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
-        } else {
+        }
+        // 返回单个
+        else {
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
         }

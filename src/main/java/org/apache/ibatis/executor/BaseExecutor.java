@@ -149,6 +149,7 @@ public abstract class BaseExecutor implements Executor {
     if (queryStack == 0 && ms.isFlushCacheRequired()) {
       clearLocalCache();
     }
+
     List<E> list;
     try {
       queryStack++;
@@ -156,11 +157,13 @@ public abstract class BaseExecutor implements Executor {
       if (list != null) {
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
+        // 从数据库查询
         list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
       }
     } finally {
       queryStack--;
     }
+
     if (queryStack == 0) {
       for (DeferredLoad deferredLoad : deferredLoads) {
         deferredLoad.load();
@@ -276,6 +279,17 @@ public abstract class BaseExecutor implements Executor {
   protected abstract List<BatchResult> doFlushStatements(boolean isRollback)
       throws SQLException;
 
+  /**
+   *
+   * @param ms 映射SQL
+   * @param parameter SQL中的动态参数
+   * @param rowBounds 分页用的，默认不分页 RowBounds.DEFAULT ， 可参考 {@link org.apache.ibatis.session.RowBounds}
+   * @param resultHandler 自定义处理返回结果 ，不使用写 Executor.NO_RESULT_HANDLER
+   * @param boundSql 绑定的SQL
+   * @param <E>
+   * @return
+   * @throws SQLException
+   */
   protected abstract <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)
       throws SQLException;
 

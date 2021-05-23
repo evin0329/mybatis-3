@@ -57,10 +57,12 @@ public class ParamNameResolver {
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
+      // TODO: 2021/5/23 未知 
       if (isSpecialParameter(paramTypes[paramIndex])) {
         // skip special parameters
         continue;
       }
+      // 获取@Param中声明的参数名
       String name = null;
       for (Annotation annotation : paramAnnotations[paramIndex]) {
         if (annotation instanceof Param) {
@@ -69,6 +71,7 @@ public class ParamNameResolver {
           break;
         }
       }
+      // 通过反射获取形参名
       if (name == null) {
         // @Param was not specified.
         if (config.isUseActualParamName()) {
@@ -115,16 +118,23 @@ public class ParamNameResolver {
     final int paramCount = names.size();
     if (args == null || paramCount == 0) {
       return null;
-    } else if (!hasParamAnnotation && paramCount == 1) {
+    }
+    // 无@Param注解 并且 只有一个形参
+    else if (!hasParamAnnotation && paramCount == 1) {
       return args[names.firstKey()];
-    } else {
+    }
+    // 多个形参
+    else {
       final Map<String, Object> param = new ParamMap<Object>();
       int i = 0;
       for (Map.Entry<Integer, String> entry : names.entrySet()) {
+        // add key -> args[i], value -> 参数
         param.put(entry.getValue(), args[entry.getKey()]);
         // add generic param names (param1, param2, ...)
+        // 添加通用参数名称（param1，param2等）
         final String genericParamName = GENERIC_NAME_PREFIX + String.valueOf(i + 1);
         // ensure not to overwrite parameter named with @Param
+        // 确保不覆盖以@Param命名的参数
         if (!names.containsValue(genericParamName)) {
           param.put(genericParamName, args[entry.getKey()]);
         }

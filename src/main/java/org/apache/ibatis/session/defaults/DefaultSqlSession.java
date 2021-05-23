@@ -147,6 +147,7 @@ public class DefaultSqlSession implements SqlSession {
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
+      // 执行查询
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
@@ -320,6 +321,7 @@ public class DefaultSqlSession implements SqlSession {
   }
 
   private Object wrapCollection(final Object object) {
+    // 1.集合
     if (object instanceof Collection) {
       StrictMap<Object> map = new StrictMap<Object>();
       map.put("collection", object);
@@ -327,11 +329,14 @@ public class DefaultSqlSession implements SqlSession {
         map.put("list", object);
       }
       return map;
-    } else if (object != null && object.getClass().isArray()) {
+    }
+    // 2.数组
+    else if (object != null && object.getClass().isArray()) {
       StrictMap<Object> map = new StrictMap<Object>();
       map.put("array", object);
       return map;
     }
+    // 3.map
     return object;
   }
 

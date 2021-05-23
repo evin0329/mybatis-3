@@ -120,12 +120,17 @@ public class MapperAnnotationBuilder {
 
   public void parse() {
     String resource = type.toString();
+    // Mapper文件未被加载
     if (!configuration.isResourceLoaded(resource)) {
+      // 加载xml
       loadXmlResource();
+      // 添加Mapper接口为已解析
       configuration.addLoadedResource(resource);
       assistant.setCurrentNamespace(type.getName());
+      // todo 未知
       parseCache();
       parseCacheRef();
+      // 循环Mapper接口上的每个方法并解析
       Method[] methods = type.getMethods();
       for (Method method : methods) {
         try {
@@ -138,6 +143,7 @@ public class MapperAnnotationBuilder {
         }
       }
     }
+    // 解析待定方法
     parsePendingMethods();
   }
 
@@ -302,6 +308,7 @@ public class MapperAnnotationBuilder {
       KeyGenerator keyGenerator;
       String keyProperty = "id";
       String keyColumn = null;
+      // 修改或删除  根据情况使用主键生成器
       if (SqlCommandType.INSERT.equals(sqlCommandType) || SqlCommandType.UPDATE.equals(sqlCommandType)) {
         // first check for SelectKey annotation - that overrides everything else
         SelectKey selectKey = method.getAnnotation(SelectKey.class);
@@ -315,10 +322,13 @@ public class MapperAnnotationBuilder {
           keyProperty = options.keyProperty();
           keyColumn = options.keyColumn();
         }
-      } else {
+      }
+      // 不使用主键生成器
+      else {
         keyGenerator = NoKeyGenerator.INSTANCE;
       }
 
+      // @Options定义的额外参数
       if (options != null) {
         if (FlushCachePolicy.TRUE.equals(options.flushCache())) {
           flushCache = true;
@@ -334,6 +344,7 @@ public class MapperAnnotationBuilder {
 
       String resultMapId = null;
       ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
+      // 结果映射
       if (resultMapAnnotation != null) {
         String[] resultMaps = resultMapAnnotation.value();
         StringBuilder sb = new StringBuilder();
@@ -344,10 +355,13 @@ public class MapperAnnotationBuilder {
           sb.append(resultMap);
         }
         resultMapId = sb.toString();
-      } else if (isSelect) {
+      }
+      else if (isSelect) {
+        // 解析结果映射 add -> MapperBuilderAssistant
         resultMapId = parseResultMap(method);
       }
 
+      // 添加映射语句 -> 该次解析完成
       assistant.addMappedStatement(
           mappedStatementId,
           sqlSource,
@@ -375,7 +389,7 @@ public class MapperAnnotationBuilder {
           options != null ? nullOrEmpty(options.resultSets()) : null);
     }
   }
-  
+
   private LanguageDriver getLanguageDriver(Method method) {
     Lang lang = method.getAnnotation(Lang.class);
     Class<?> langClass = null;
@@ -454,16 +468,20 @@ public class MapperAnnotationBuilder {
 
   private SqlSource getSqlSourceFromAnnotations(Method method, Class<?> parameterType, LanguageDriver languageDriver) {
     try {
+      // 获取sql注解
       Class<? extends Annotation> sqlAnnotationType = getSqlAnnotationType(method);
+      // 获取sql提供者注解
       Class<? extends Annotation> sqlProviderAnnotationType = getSqlProviderAnnotationType(method);
       if (sqlAnnotationType != null) {
         if (sqlProviderAnnotationType != null) {
           throw new BindingException("You cannot supply both a static SQL and SqlProvider to method named " + method.getName());
         }
+        // 获取注解中的sql字符串, 并构建。
         Annotation sqlAnnotation = method.getAnnotation(sqlAnnotationType);
         final String[] strings = (String[]) sqlAnnotation.getClass().getMethod("value").invoke(sqlAnnotation);
         return buildSqlSourceFromStrings(strings, parameterType, languageDriver);
-      } else if (sqlProviderAnnotationType != null) {
+      }
+      else if (sqlProviderAnnotationType != null) {
         Annotation sqlProviderAnnotation = method.getAnnotation(sqlProviderAnnotationType);
         return new ProviderSqlSource(assistant.getConfiguration(), sqlProviderAnnotation);
       }
@@ -551,7 +569,7 @@ public class MapperAnnotationBuilder {
       resultMappings.add(resultMapping);
     }
   }
-  
+
   private String nestedSelectId(Result result) {
     String nestedSelect = result.one().select();
     if (nestedSelect.length() < 1) {
@@ -572,12 +590,12 @@ public class MapperAnnotationBuilder {
     }
     return isLazy;
   }
-  
+
   private boolean hasNestedSelect(Result result) {
     if (result.one().select().length() > 0 && result.many().select().length() > 0) {
       throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
     }
-    return result.one().select().length() > 0 || result.many().select().length() > 0;  
+    return result.one().select().length() > 0 || result.many().select().length() > 0;
   }
 
   private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {

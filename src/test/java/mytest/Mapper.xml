@@ -22,9 +22,12 @@
 
 <mapper namespace="mytest.Mapper">
 
-	<select id="getUser" resultMap="result">
+
+	<select id="getUser" resultMap="result" parameterType="int">
 		select id, name from users where id = #{id}
+		<if test="true">and deleted = false</if>
 	</select>
+
 
 	<resultMap type="mytest.User" id="result" autoMapping="true">
 	</resultMap>

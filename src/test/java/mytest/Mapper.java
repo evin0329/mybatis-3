@@ -15,11 +15,17 @@
  */
 package mytest;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.submitted.automapping.Article;
 
 import java.util.List;
 
 public interface Mapper {
+
+  default String testDefault(String str){
+    return str;
+  };
 
   User getUser(Integer id);
 
@@ -32,4 +38,10 @@ public interface Mapper {
   List<Book> getBooks();
 
   Article getArticle();
+
+  @Select("select 1")
+  String ping();
+
+  @Select("select id, name from users where id = #{id} and deleted = #{deleted}")
+  User getUserById(@Param("id") int id, @Param("deleted") boolean deleted);
 }

@@ -29,32 +29,103 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * mapper文件的一个一个的标签对应的是mappedstatement的对象，标签里面的属性对应的是mappedstatement中的属性
+ *
  * @author Clinton Begin
  */
 public final class MappedStatement {
 
+  /**
+   * mapper配置文件名，如：UserMapper.xml
+   */
   private String resource;
+  /**
+   * 全局配置
+   */
   private Configuration configuration;
+  /**
+   * 节点的id属性加命名空间,如：com.lucky.mybatis.dao.UserMapper.selectByExample
+   */
   private String id;
+  /**
+   * 从数据库每次读取的数量单位。该举措是为了防止一次性从数据库加载数据过多，导致内存溢出。（依赖驱动)（MySQL不支持 ，Oracle支持）
+   */
   private Integer fetchSize;
+  /**
+   * 超时时间 （依赖驱动)
+   */
   private Integer timeout;
+  /**
+   * 操作SQL的对象的类型(Statement、PreparedStatement<默认>、CallableStatement)
+   */
   private StatementType statementType;
+  /**
+   * 结果集类型 （依赖驱动)
+   */
   private ResultSetType resultSetType;
+  /**
+   * sql语句源
+   */
   private SqlSource sqlSource;
+  /**
+   * 缓存
+   */
   private Cache cache;
+  /**
+   * 参数map
+   */
   private ParameterMap parameterMap;
+  /**
+   * 结果列表
+   */
   private List<ResultMap> resultMaps;
+  /**
+   * 任何时候只要语句调用，都会导致本地缓存和二级缓存被清空。（select = false , cud = true）
+   */
   private boolean flushCacheRequired;
+  /**
+   * 是否使用二级缓存，select默认为true
+   */
   private boolean useCache;
+  /**
+   * 结果是否排序
+   */
   private boolean resultOrdered;
+  /**
+   * sql语句的类型，如select、update、delete、insert
+   */
   private SqlCommandType sqlCommandType;
+  /**
+   * 主键生成器
+   */
   private KeyGenerator keyGenerator;
+  /**
+   * 对应实体类中的属性
+   */
   private String[] keyProperties;
+  /**
+   * 对应数据库表中的主键列
+   */
   private String[] keyColumns;
+  /**
+   * 是否使用嵌套结果集
+   */
   private boolean hasNestedResultMaps;
+  /**
+   * 数据库id
+   */
   private String databaseId;
+  /**
+   * 语句日志
+   */
   private Log statementLog;
+  /**
+   * 语言驱动
+   */
   private LanguageDriver lang;
+  /**
+   * 这个设置仅对多结果集的情况适用，它将列出语句执行后返回的结果集并每个结果集给一个名称，名称是逗号分隔的。
+   */
   private String[] resultSets;
 
   MappedStatement() {
@@ -289,6 +360,7 @@ public final class MappedStatement {
   }
   
   public BoundSql getBoundSql(Object parameterObject) {
+    // 获取绑定的sql
     BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings == null || parameterMappings.isEmpty()) {

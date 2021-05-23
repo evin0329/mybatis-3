@@ -708,6 +708,7 @@ public class Configuration {
   }
 
   public MappedStatement getMappedStatement(String id, boolean validateIncompleteStatements) {
+    // TODO: 2021/5/23 未知 
     if (validateIncompleteStatements) {
       buildAllStatements();
     }

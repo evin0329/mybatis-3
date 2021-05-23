@@ -48,6 +48,8 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * <mapper>标签构建器
+ *
  * @author Clinton Begin
  */
 public class XMLMapperBuilder extends BaseBuilder {
@@ -89,7 +91,9 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   public void parse() {
     if (!configuration.isResourceLoaded(resource)) {
+      // 配置mapper节点
       configurationElement(parser.evalNode("/mapper"));
+      // 已解析xml
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
     }
@@ -109,12 +113,19 @@ public class XMLMapperBuilder extends BaseBuilder {
       if (namespace == null || namespace.equals("")) {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
+      
       builderAssistant.setCurrentNamespace(namespace);
+      //解析cache-ref节点
       cacheRefElement(context.evalNode("cache-ref"));
+      //解析cache节点
       cacheElement(context.evalNode("cache"));
+      //解析parameterMap节点
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
+      //解析resultMap节点
       resultMapElements(context.evalNodes("/mapper/resultMap"));
+      //解析sql节点
       sqlElement(context.evalNodes("/mapper/sql"));
+      //解析select|insert|update|delete节点
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. Cause: " + e, e);
@@ -129,9 +140,11 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
+    // 循环Statement(xml中select、insert、update、delete等)节点
     for (XNode context : list) {
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context, requiredDatabaseId);
       try {
+        // 解析语句节点
         statementParser.parseStatementNode();
       } catch (IncompleteElementException e) {
         configuration.addIncompleteStatement(statementParser);
@@ -266,6 +279,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     Discriminator discriminator = null;
     List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
     resultMappings.addAll(additionalResultMappings);
+    // 子节点解析
     List<XNode> resultChildren = resultMapNode.getChildren();
     for (XNode resultChild : resultChildren) {
       if ("constructor".equals(resultChild.getName())) {
