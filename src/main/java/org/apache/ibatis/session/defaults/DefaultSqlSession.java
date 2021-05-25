@@ -41,7 +41,8 @@ import org.apache.ibatis.session.SqlSession;
 
 /**
  *
- * {@link SqlSession}的默认实现。 请注意，此类不是线程安全的
+ * {@link SqlSession}的默认实现。 请注意，此类不是线程安全的.
+ * 主要用于调用Executor和Configuration的方法
  *
  * The default implementation for {@link SqlSession}.
  * Note that this class is not Thread-Safe.

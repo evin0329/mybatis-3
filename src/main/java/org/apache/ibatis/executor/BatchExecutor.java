@@ -61,14 +61,19 @@ public class BatchExecutor extends BaseExecutor {
     final BoundSql boundSql = handler.getBoundSql();
     final String sql = boundSql.getSql();
     final Statement stmt;
+    //判断当前执行的SQL是否在上一次已经执行过
+    //下面的条件表示，SQL语句相同，调用的mapper接口方法也相同
     if (sql.equals(currentSql) && ms.equals(currentStatement)) {
+      //如果在上一次已经执行过，那么直接复用上一次使用的Statement或者PreparedStatement对象
       int last = statementList.size() - 1;
       stmt = statementList.get(last);
       applyTransactionTimeout(stmt);
      handler.parameterize(stmt);//fix Issues 322
+      //batchResult用于记录批次执行结果
       BatchResult batchResult = batchResultList.get(last);
       batchResult.addParameterObject(parameterObject);
     } else {
+      //下面的内容是新建Statement或者PreparedStatement对象，用于执行新的SQL语句
       Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection, transaction.getTimeout());
       handler.parameterize(stmt);    //fix Issues 322
@@ -78,7 +83,9 @@ public class BatchExecutor extends BaseExecutor {
       batchResultList.add(new BatchResult(ms, sql, parameterObject));
     }
   // handler.parameterize(stmt);
+    //将SQL加入批次
     handler.batch(stmt);
+    //返回一个常量值，表示当前是批次执行
     return BATCH_UPDATE_RETURN_VALUE;
   }
 
@@ -117,6 +124,7 @@ public class BatchExecutor extends BaseExecutor {
       if (isRollback) {
         return Collections.emptyList();
       }
+      //遍历每个批次
       for (int i = 0, n = statementList.size(); i < n; i++) {
         Statement stmt = statementList.get(i);
         applyTransactionTimeout(stmt);
@@ -152,6 +160,7 @@ public class BatchExecutor extends BaseExecutor {
       }
       return results;
     } finally {
+      //关闭每个Statement对象
       for (Statement stmt : statementList) {
         closeStatement(stmt);
       }

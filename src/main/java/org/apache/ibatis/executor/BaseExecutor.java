@@ -116,6 +116,7 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
+    // 先清理一级缓存，再更新，调用子类
     clearLocalCache();
     return doUpdate(ms, parameter);
   }
@@ -146,21 +147,27 @@ public abstract class BaseExecutor implements Executor {
     if (closed) {
       throw new ExecutorException("Executor was closed.");
     }
+    //先清局部缓存，再查询，但仅当查询堆栈为0时才清，为了处理递归调用
     if (queryStack == 0 && ms.isFlushCacheRequired()) {
+      // 清除一级缓存
       clearLocalCache();
     }
 
     List<E> list;
     try {
+      //加一，这样递归调用到上面的时候就不会再清局部缓存了
       queryStack++;
+      // resultHandler为null时，从一级缓存中取
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
+        // 从一级缓存中取结果
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
         // 从数据库查询
         list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
       }
     } finally {
+      //清空堆栈
       queryStack--;
     }
 
