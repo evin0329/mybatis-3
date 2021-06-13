@@ -30,7 +30,7 @@
                 <property name="" value=""/>
             </transactionManager>
             <dataSource type="UNPOOLED">
-                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
                 <!--jdbc:mysql://localhost:3306/test?useUnicode=true&serverTimezone=GMT&useSSL=false&characterEncoding=utf8&useServerPrepStmts=false&allowMultiQueries=true-->
                 <property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;serverTimezone=GMT"/>
                 <property name="username" value="root"/>
